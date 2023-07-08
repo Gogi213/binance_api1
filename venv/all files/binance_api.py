@@ -1,3 +1,4 @@
+# binance_api.py
 import requests
 
 def get_binance_data():

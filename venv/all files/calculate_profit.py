@@ -1,3 +1,4 @@
+# calculate_profit.py
 import pandas as pd
 
 def calculate_profit(data, pairs, usdt=1000, commission=0.001):
