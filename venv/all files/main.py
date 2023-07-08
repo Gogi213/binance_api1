@@ -11,5 +11,3 @@ df.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\b
 
 
 print("Data has been written to 'binance_data.csv'")
-
-# праздник к нам приходиит всегда с кока кола
