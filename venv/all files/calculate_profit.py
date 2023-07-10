@@ -15,6 +15,9 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     # Convert 'askPrice', 'bidPrice', 'askQty', 'bidQty' to float
     df_data[['askPrice', 'bidPrice', 'askQty', 'bidQty']] = df_data[['askPrice', 'bidPrice', 'askQty', 'bidQty']].astype(float)
 
+    # Filter rows with zero values in 'askPrice', 'bidPrice', 'askQty', 'bidQty'
+    df_data = df_data[(df_data['askPrice'] != 0) & (df_data['bidPrice'] != 0) & (df_data['askQty'] != 0) & (df_data['bidQty'] != 0)]
+
     # Create two dataframes for buy and sell operations
     df_buy = df_data[df_data['quote'] == 'USDT'].copy()
     df_sell = df_data[df_data['base'] == 'USDT'].copy()
