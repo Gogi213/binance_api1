@@ -1,7 +1,7 @@
 # main.py
 import pandas as pd
 import binance_api
-from binance_api import get_binance_data, get_binance_symbols
+from binance_api import get_binance_data, get_binance_symbols, get_binance_status
 from calculate_profit import calculate_profit
 from calculate_profit2 import calculate_profit2  # Import new function
 
@@ -16,13 +16,32 @@ def custom_format(x):
 
 data = get_binance_data()
 pairs = get_binance_symbols()
+status = get_binance_status()
 df = calculate_profit(data, pairs)
+df['status'] = df['symbol'].map(status)
+# Get the list of column names
+cols = list(df.columns)
+# Move 'status' column right after 'symbol'
+cols.insert(1, cols.pop(cols.index('status')))
+# Reindex the DataFrame
+df = df.reindex(columns=cols)
+# Filter out rows with 'BREAK' status
+df = df[df['status'] != 'BREAK']
 
 formatted_df = df.applymap(custom_format)
 formatted_df.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\binance_data.csv', index=False)
 
 df_prices = pd.DataFrame(data)
 df_prices['pair'] = df_prices['symbol'].map(pairs)
+df_prices['status'] = df_prices['symbol'].map(status)
+# Get the list of column names
+cols = list(df_prices.columns)
+# Move 'status' column right after 'symbol'
+cols.insert(1, cols.pop(cols.index('status')))
+# Reindex the DataFrame
+df_prices = df_prices.reindex(columns=cols)
+# Filter out rows with 'BREAK' status
+df_prices = df_prices[df_prices['status'] != 'BREAK']
 df_prices['pair'].fillna(df_prices['symbol'], inplace=True)
 df_prices[['base', 'quote']] = df_prices['pair'].str.split('/', expand=True)
 df_prices[['askPrice', 'bidPrice', 'askQty', 'bidQty']] = df_prices[['askPrice', 'bidPrice', 'askQty', 'bidQty']].astype(float)

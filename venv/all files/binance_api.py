@@ -14,3 +14,12 @@ def get_binance_symbols():
     symbols = data['symbols']
     pairs = {f"{symbol['baseAsset']}{symbol['quoteAsset']}": f"{symbol['baseAsset']}/{symbol['quoteAsset']}" for symbol in symbols}
     return pairs
+
+
+def get_binance_status():
+    url = 'https://api.binance.com/api/v3/exchangeInfo'
+    response = requests.get(url)
+    data = response.json()
+    symbols = data['symbols']
+    status = {f"{symbol['baseAsset']}{symbol['quoteAsset']}": symbol['status'] for symbol in symbols}
+    return status
