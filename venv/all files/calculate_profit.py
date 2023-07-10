@@ -31,8 +31,8 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     df_sell['usdt_equals'] = df_sell['amount'] * df_sell['askPrice']
 
     # Calculate profit for both operations
-    df_buy['profit'] = df_buy['usdt_equals'] - usdt
-    df_sell['profit'] = usdt - df_sell['usdt_equals']
+    df_buy['profit'] = (df_buy['usdt_equals'] - usdt) / usdt * 100
+    df_sell['profit'] = (usdt - df_sell['usdt_equals']) / usdt * 100
 
     # Add 'swap1' column
     df_buy.insert(df_buy.columns.get_loc('amount'), 'swap1', df_buy['base'])
