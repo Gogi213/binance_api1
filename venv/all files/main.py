@@ -1,7 +1,9 @@
+# main.py
 import pandas as pd
 import binance_api
 from binance_api import get_binance_data, get_binance_symbols
 from calculate_profit import calculate_profit
+from calculate_profit2 import calculate_profit2  # Import new function
 
 def custom_format(x):
     if isinstance(x, float):
@@ -31,3 +33,8 @@ formatted_df_prices.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\v
 
 print("Data has been written to 'binance_data.csv'")
 print("Data has been written to 'binance_prices.csv'")
+
+# Call new function for the second stage of profit calculation
+calculate_profit2()
+
+print("Second stage of profit calculation has been completed.")

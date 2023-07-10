@@ -1,58 +1,62 @@
 import pandas as pd
+import numpy as np
 
-def perform_second_exchange(data_file):
-    # Загрузка данных из файла
-    df = pd.read_csv(data_file)
+def calculate_profit2():
+    # Load data from csv files
+    df_data = pd.read_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\binance_data.csv')
+    df_prices = pd.read_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\binance_prices.csv')
 
-    # Создание новых столбцов для второго этапа
-    df['pair2'] = ''
-    df['bidPrice2'] = 0.0
-    df['bidQty2'] = 0.0
-    df['askPrice2'] = 0.0
-    df['askQty2'] = 0.0
-    df['base2'] = ''
-    df['quote2'] = ''
-    df['buy/sell_amount2'] = ''
-    df['wrap2'] = ''
-    df['usdt_equals2'] = 0.0
-    df['profit2'] = 0.0
+    # Define commission
+    commission = 0.001
 
-    # Логика обмена валюты на втором этапе
-    for index, row in df.iterrows():
-        # Получение текущих значений
-        symbol = row['symbol']
-        wrap1 = row['wrap1']
-        usdt_equals = row['usdt_equals']
+    # Iterate over each row in df_data
+    for index, row in df_data.iterrows():
+        # Get the currency to swap
+        swap_currency = row['swap']
 
-        # Выбор валютной пары с максимальной прибылью или минимальным уменьшением
-        best_pair = ''
-        best_profit = 0.0
+        # Get the quantity of the currency to swap
+        quantity = row['amount']
 
-        for pair in available_pairs:
-            # Расчет прибыли для текущей валютной пары
-            profit = calculate_profit(pair)
+        # Filter df_prices for rows where the base or quote currency is the swap currency
+        df_prices_filtered = df_prices[(df_prices['base'] == swap_currency) | (df_prices['quote'] == swap_currency)]
 
-            # Обновление best_pair и best_profit, если текущая пара лучше предыдущей
-            if profit > best_profit:
-                best_pair = pair
-                best_profit = profit
-                # Обновление значений bidPrice2, bidQty2, askPrice2 и askQty2
-                df.at[index, 'bidPrice2'] = get_bid_price(pair)  # Замените на соответствующую логику получения bidPrice2
-                df.at[index, 'bidQty2'] = get_bid_quantity(pair)  # Замените на соответствующую логику получения bidQty2
-                df.at[index, 'askPrice2'] = get_ask_price(pair)  # Замените на соответствующую логику получения askPrice2
-                df.at[index, 'askQty2'] = get_ask_quantity(pair)  # Замените на соответствующую логику получения askQty2
+        # Initialize variables to store the best profit and corresponding row
+        best_profit = 0
+        best_row = None
 
-        # Обновление значений в новых столбцах
-        df.at[index, 'pair2'] = best_pair
-        df.at[index, 'base2'] = get_base_currency(best_pair)  # Замените на соответствующую логику получения base2
-        df.at[index, 'quote2'] = get_quote_currency(best_pair)  # Замените на соответствующую логику получения quote2
-        df.at[index, 'buy/sell_amount2'] = get_buy_sell_amount(best_pair)  # Замените на соответствующую логику получения buy/sell_amount2
-        df.at[index, 'wrap2'] = get_wrap_currency(best_pair)  # Замените на соответствующую логику получения wrap2
-        df.at[index, 'usdt_equals2'] = calculate_usdt_equivalent(best_pair)  # Замените на соответствующую логику расчета usdt_equals2
-        df.at[index, 'profit2'] = best_profit
+        # Iterate over each row in df_prices_filtered
+        for index2, row2 in df_prices_filtered.iterrows():
+            # Calculate the profit for this row
+            if row2['base'] == swap_currency:
+                # If the base currency is the swap currency, we are selling
+                amount2 = quantity / row2['bidPrice'] * (1 - commission)
+                usdt_equals2 = amount2 * row2['askPrice']
+                profit2 = (usdt_equals2 - quantity) / quantity * 100
+            else:
+                # If the quote currency is the swap currency, we are buying
+                amount2 = quantity * row2['askPrice'] * (1 - commission)
+                usdt_equals2 = amount2 / row2['bidPrice']
+                profit2 = (usdt_equals2 - quantity) / quantity * 100
 
-    # Сохранение данных в файл
-    df.to_csv(data_file, index=False)
+            # If this profit is better than the best profit so far, update the best profit and corresponding row
+            if profit2 > best_profit:
+                best_profit = profit2
+                best_row = row2
 
-# Вызов функции для выполнения второго этапа обмена
-perform_second_exchange('binance_data.csv')
+        # Check if a best row was found
+        if best_row is not None:
+            # Update df_data with the information from the best row
+            df_data.loc[index, 'pair2'] = best_row['pair']
+            df_data.loc[index, 'base2'] = best_row['base']
+            df_data.loc[index, 'quote2'] = best_row['quote']
+            df_data.loc[index, 'bidPrice2'] = best_row['bidPrice']
+            df_data.loc[index, 'bidQty2'] = best_row['bidQty']
+            df_data.loc[index, 'askPrice2'] = best_row['askPrice']
+            df_data.loc[index, 'askQty2'] = best_row['askQty']
+            df_data.loc[index, 'swap2'] = best_row['base'] if best_row['base'] != swap_currency else best_row['quote']
+            df_data.loc[index, 'amount2'] = amount2
+            df_data.loc[index, 'usdt_equals2'] = usdt_equals2
+            df_data.loc[index, 'profit2'] = best_profit
+
+    # Save df_data to csv
+    df_data.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\binance_data.csv', index=False)
