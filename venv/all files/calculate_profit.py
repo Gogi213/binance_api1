@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     df_data = pd.DataFrame(data)
@@ -40,6 +41,14 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
 
     # Concatenate buy and sell dataframes
     df_data = pd.concat([df_buy, df_sell])
+
+    # Add placeholders for new columns
+    new_columns = ['pair2', 'base2', 'quote2', 'bidPrice2', 'bidQty2', 'askPrice2', 'askQty2', 'swap2', 'amount2', 'usdt_equals2', 'profit2']
+    for col in new_columns:
+        df_data[col] = np.nan
+
+    # Rearrange columns
+    df_data = df_data[['symbol', 'pair', 'base', 'quote', 'bidPrice', 'bidQty', 'askPrice', 'askQty', 'swap', 'amount', 'usdt_equals', 'profit'] + new_columns]
 
     # Sort by profit and get top 10
     df_data = df_data.sort_values('profit', ascending=False).head(900)
