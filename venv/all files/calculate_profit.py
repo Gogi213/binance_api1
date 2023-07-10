@@ -34,9 +34,9 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     df_buy['profit'] = (df_buy['usdt_equals'] - usdt) / usdt * 100
     df_sell['profit'] = (usdt - df_sell['usdt_equals']) / usdt * 100
 
-    # Add 'swap1' column
-    df_buy.insert(df_buy.columns.get_loc('amount'), 'swap1', df_buy['base'])
-    df_sell.insert(df_sell.columns.get_loc('amount'), 'swap1', df_sell['quote'])
+    # Add 'swap' column
+    df_buy.insert(df_buy.columns.get_loc('amount'), 'swap', df_buy['base'])
+    df_sell.insert(df_sell.columns.get_loc('amount'), 'swap', df_sell['quote'])
 
     # Concatenate buy and sell dataframes
     df_data = pd.concat([df_buy, df_sell])
