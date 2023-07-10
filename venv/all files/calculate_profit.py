@@ -1,4 +1,3 @@
-# calculate_profit.py
 import pandas as pd
 
 def calculate_profit(data, pairs, usdt=1000, commission=0.001):
@@ -13,23 +12,33 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     # Split 'pair' column into 'base' and 'quote' columns
     df_data[['base', 'quote']] = df_data['pair'].str.split('/', expand=True)
 
-    # Filter rows where 'quote' is 'USDT'
-    df_data = df_data[df_data['quote'] == 'USDT']
-
     # Convert 'askPrice', 'bidPrice', 'askQty', 'bidQty' to float
     df_data[['askPrice', 'bidPrice', 'askQty', 'bidQty']] = df_data[['askPrice', 'bidPrice', 'askQty', 'bidQty']].astype(float)
 
-    # Calculate buy_amount and usdt_equals
-    df_data['buy_amount'] = (usdt / df_data['askPrice']) * (1 - commission)
-    df_data['usdt_equals'] = df_data['buy_amount'] * df_data['bidPrice']
+    # Create two dataframes for buy and sell operations
+    df_buy = df_data[df_data['quote'] == 'USDT'].copy()
+    df_sell = df_data[df_data['base'] == 'USDT'].copy()
 
-    # Calculate profit
-    df_data['profit'] = df_data['usdt_equals'] - usdt
+    # Calculate buy_amount and usdt_equals for buy operations
+    df_buy['amount'] = (usdt / df_buy['askPrice']) * (1 - commission)
+    df_buy['usdt_equals'] = df_buy['amount'] * df_buy['bidPrice']
+
+    # Calculate sell_amount and usdt_equals for sell operations
+    df_sell['amount'] = (usdt * (1 - commission)) / df_sell['bidPrice']
+    df_sell['usdt_equals'] = df_sell['amount'] * df_sell['askPrice']
+
+    # Calculate profit for both operations
+    df_buy['profit'] = df_buy['usdt_equals'] - usdt
+    df_sell['profit'] = usdt - df_sell['usdt_equals']
 
     # Add 'swap1' column
-    df_data.insert(df_data.columns.get_loc('buy_amount'), 'swap1', df_data['base'])
+    df_buy.insert(df_buy.columns.get_loc('amount'), 'swap1', df_buy['base'])
+    df_sell.insert(df_sell.columns.get_loc('amount'), 'swap1', df_sell['quote'])
+
+    # Concatenate buy and sell dataframes
+    df_data = pd.concat([df_buy, df_sell])
 
     # Sort by profit and get top 10
-    df_data = df_data.sort_values('profit', ascending=False).head(10)
+    df_data = df_data.sort_values('profit', ascending=False).head(900)
 
     return df_data
