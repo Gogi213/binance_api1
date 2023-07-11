@@ -1,4 +1,3 @@
-# calculate_profit2.py
 import pandas as pd
 import numpy as np
 
@@ -46,6 +45,25 @@ def calculate_profit2():
 
         # Check if a best row was found
         if best_row is not None:
+            # Calculate the amount of the second currency to buy
+            if best_row['base'] == swap_currency:
+                amount2 = (quantity - (quantity * 0.001)) / best_row['bidPrice']
+            elif best_row['quote'] == swap_currency:
+                amount2 = (quantity - (quantity * 0.001)) / best_row['askPrice']
+            else:
+                amount2 = 0
+
+            # Calculate the USDT equivalent of the second currency
+            usdt_equals2 = amount2 * best_row['askPrice']
+
+            # Calculate the profit of the second trade
+            if best_row['base'] == swap_currency:
+                profit2 = (usdt_equals2 - (usdt_equals2 * 0.001)) - quantity
+            elif best_row['quote'] == swap_currency:
+                profit2 = (amount2 - (amount2 * 0.001)) - (quantity / best_row['askPrice'])
+            else:
+                profit2 = 0
+
             # Update df_data with the information from the best row
             df_data.loc[index, 'pair2'] = best_row['pair']
             df_data.loc[index, 'base2'] = best_row['base']
@@ -57,7 +75,7 @@ def calculate_profit2():
             df_data.loc[index, 'swap2'] = best_row['base'] if best_row['base'] != swap_currency else best_row['quote']
             df_data.loc[index, 'amount2'] = amount2
             df_data.loc[index, 'usdt_equals2'] = usdt_equals2
-            df_data.loc[index, 'profit2'] = best_profit
+            df_data.loc[index, 'profit2'] = profit2
 
     # Save df_data to csv
     df_data.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\binance_data.csv', index=False)
