@@ -38,14 +38,15 @@ def update_table(conn, df, table_name):
     # Insert new rows into the table
     for index, row in df.iterrows():
         cursor.execute(
-            f"""INSERT INTO {table_name} (symbol, pair, base, quote, bidprice, bidqty, askprice, askqty, 
+            f"""INSERT INTO {table_name} (symbol, status, pair, base, quote, bidprice, bidqty, askprice, askqty, 
                                           swap, amount, usdt_equals, profit, 
                                           pair2, base2, quote2, bidprice2, bidqty2, askprice2, askqty2, 
                                           swap2, amount2, usdt_equals2, profit2)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
-            (row['symbol'], row['pair'], row['base'], row['quote'], row['bidprice'], row['bidqty'],
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+            (row['symbol'], row['status'], row['pair'], row['base'], row['quote'], row['bidprice'], row['bidqty'],
              row['askprice'], row['askqty'], row['swap'], row['amount'], row['usdt_equals'], row['profit'],
-             row['pair2'], row['base2'], row['quote2'], row['bidprice2'], row['bidqty2'], row['askprice2'], row['askqty2'],
+             row['pair2'], row['base2'], row['quote2'], row['bidprice2'], row['bidqty2'], row['askprice2'],
+             row['askqty2'],
              row['swap2'], row['amount2'], row['usdt_equals2'], row['profit2'])
         )
     conn.commit()

@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 from bd import connect_to_db, close_connection, update_table
+from binance_api import get_binance_status
 
 def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     df_data = pd.DataFrame(data)
@@ -57,6 +58,9 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
 
     # Connect to the database
     conn = connect_to_db()
+
+    # Добавьте следующую строку перед вызовом update_table
+    df_data['status'] = df_data['symbol'].map(get_binance_status())
 
     # Update the 'binance_data' table
     update_table(conn, df_data, 'binance_data')
