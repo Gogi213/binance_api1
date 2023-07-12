@@ -1,3 +1,4 @@
+# calculate_profit2
 import pandas as pd
 import numpy as np
 
@@ -29,13 +30,13 @@ def calculate_profit2():
             # Calculate the profit for this row
             if row2['base'] == swap_currency:
                 # If the base currency is the swap currency, we are selling
-                amount2 = quantity / row2['bidPrice'] * (1 - commission)
-                usdt_equals2 = amount2 * row2['askPrice']
+                amount2 = quantity / row2['bidprice'] * (1 - commission)
+                usdt_equals2 = amount2 * row2['askprice']
                 profit2 = (usdt_equals2 - quantity) / quantity * 100
             else:
                 # If the quote currency is the swap currency, we are buying
-                amount2 = quantity * row2['askPrice'] * (1 - commission)
-                usdt_equals2 = amount2 / row2['bidPrice']
+                amount2 = quantity * row2['askprice'] * (1 - commission)
+                usdt_equals2 = amount2 / row2['bidprice']
                 profit2 = (usdt_equals2 - quantity) / quantity * 100
 
             # If this profit is better than the best profit so far, update the best profit and corresponding row
@@ -47,20 +48,20 @@ def calculate_profit2():
         if best_row is not None:
             # Calculate the amount of the second currency to buy
             if best_row['base'] == swap_currency:
-                amount2 = (quantity - (quantity * 0.001)) / best_row['bidPrice']
+                amount2 = (quantity - (quantity * 0.001)) / best_row['bidprice']
             elif best_row['quote'] == swap_currency:
-                amount2 = (quantity - (quantity * 0.001)) / best_row['askPrice']
+                amount2 = (quantity - (quantity * 0.001)) / best_row['askprice']
             else:
                 amount2 = 0
 
             # Calculate the USDT equivalent of the second currency
-            usdt_equals2 = amount2 * best_row['askPrice']
+            usdt_equals2 = amount2 * best_row['askprice']
 
             # Calculate the profit of the second trade
             if best_row['base'] == swap_currency:
                 profit2 = (usdt_equals2 - (usdt_equals2 * 0.001)) - quantity
             elif best_row['quote'] == swap_currency:
-                profit2 = (amount2 - (amount2 * 0.001)) - (quantity / best_row['askPrice'])
+                profit2 = (amount2 - (amount2 * 0.001)) - (quantity / best_row['askprice'])
             else:
                 profit2 = 0
 
@@ -68,10 +69,10 @@ def calculate_profit2():
             df_data.loc[index, 'pair2'] = best_row['pair']
             df_data.loc[index, 'base2'] = best_row['base']
             df_data.loc[index, 'quote2'] = best_row['quote']
-            df_data.loc[index, 'bidPrice2'] = best_row['bidPrice']
-            df_data.loc[index, 'bidQty2'] = best_row['bidQty']
-            df_data.loc[index, 'askPrice2'] = best_row['askPrice']
-            df_data.loc[index, 'askQty2'] = best_row['askQty']
+            df_data.loc[index, 'bidprice2'] = best_row['bidprice']
+            df_data.loc[index, 'bidqty2'] = best_row['bidqty']
+            df_data.loc[index, 'askprice2'] = best_row['askprice']
+            df_data.loc[index, 'askqty2'] = best_row['askqty']
             df_data.loc[index, 'swap2'] = best_row['base'] if best_row['base'] != swap_currency else best_row['quote']
             df_data.loc[index, 'amount2'] = amount2
             df_data.loc[index, 'usdt_equals2'] = usdt_equals2

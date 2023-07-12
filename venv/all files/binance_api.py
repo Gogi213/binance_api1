@@ -1,11 +1,15 @@
 # binance_api.py
 import requests
+import pandas as pd
 
 def get_binance_data():
     url = 'https://api.binance.com/api/v3/ticker/bookTicker'
     response = requests.get(url)
     data = response.json()
-    return data
+    # Convert list of dictionaries to DataFrame and rename columns
+    df_data = pd.DataFrame(data)
+    df_data = df_data.rename(columns={'bidPrice': 'bidprice', 'bidQty': 'bidqty', 'askPrice': 'askprice', 'askQty': 'askqty'})
+    return df_data
 
 def get_binance_symbols():
     url = 'https://api.binance.com/api/v3/exchangeInfo'

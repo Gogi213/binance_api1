@@ -7,10 +7,22 @@ from calculate_profit2 import calculate_profit2  # Import new function
 from data_processing import custom_format, process_data
 
 data = get_binance_data()
+# Convert list of dictionaries to DataFrame and rename columns
+df_data = pd.DataFrame(data)
+df_data = df_data.rename(columns={'bidPrice': 'bidprice', 'bidQty': 'bidqty', 'askPrice': 'askprice', 'askQty': 'askqty'})
+pairs = get_binance_symbols()
+status = get_binance_status()
+df = calculate_profit(df_data, pairs)
+df['status'] = df['symbol'].map(status)
+
+
 pairs = get_binance_symbols()
 status = get_binance_status()
 df = calculate_profit(data, pairs)
 df['status'] = df['symbol'].map(status)
+
+# Rename columns in df
+df = df.rename(columns={'bidPrice': 'bidprice', 'bidQty': 'bidqty', 'askPrice': 'askprice', 'askQty': 'askqty'})
 
 # Process the data
 formatted_df = process_data(df)
@@ -18,6 +30,10 @@ formatted_df.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\al
 
 df_prices = pd.DataFrame(data)
 df_prices['pair'] = df_prices['symbol'].map(pairs)
+
+# Rename columns in df_prices
+df_prices = df_prices.rename(columns={'bidPrice': 'bidprice', 'bidQty': 'bidqty', 'askPrice': 'askprice', 'askQty': 'askqty'})
+
 df_prices['status'] = df_prices['symbol'].map(status)
 
 # Process the prices data

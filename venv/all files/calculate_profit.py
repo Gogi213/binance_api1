@@ -1,4 +1,4 @@
-# calculated_profit.py
+# calculate_profit.py
 import pandas as pd
 import numpy as np
 
@@ -15,22 +15,22 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     df_data[['base', 'quote']] = df_data['pair'].str.split('/', expand=True)
 
     # Convert 'askPrice', 'bidPrice', 'askQty', 'bidQty' to float
-    df_data[['askPrice', 'bidPrice', 'askQty', 'bidQty']] = df_data[['askPrice', 'bidPrice', 'askQty', 'bidQty']].astype(float)
+    df_data[['askprice', 'bidprice', 'askqty', 'bidqty']] = df_data[['askprice', 'bidprice', 'askqty', 'bidqty']].astype(float)
 
     # Filter rows with zero values in 'askPrice', 'bidPrice', 'askQty', 'bidQty'
-    df_data = df_data[(df_data['askPrice'] != 0) & (df_data['bidPrice'] != 0) & (df_data['askQty'] != 0) & (df_data['bidQty'] != 0)]
+    df_data = df_data[(df_data['askprice'] != 0) & (df_data['bidprice'] != 0) & (df_data['askqty'] != 0) & (df_data['bidqty'] != 0)]
 
     # Create two dataframes for buy and sell operations
     df_buy = df_data[df_data['quote'] == 'USDT'].copy()
     df_sell = df_data[df_data['base'] == 'USDT'].copy()
 
     # Calculate buy_amount and usdt_equals for buy operations
-    df_buy['amount'] = (usdt / df_buy['askPrice']) * (1 - commission)
-    df_buy['usdt_equals'] = df_buy['amount'] * df_buy['bidPrice']
+    df_buy['amount'] = (usdt / df_buy['askprice']) * (1 - commission)
+    df_buy['usdt_equals'] = df_buy['amount'] * df_buy['bidprice']
 
     # Calculate sell_amount and usdt_equals for sell operations
-    df_sell['amount'] = (usdt * (1 - commission)) / df_sell['bidPrice']
-    df_sell['usdt_equals'] = df_sell['amount'] * df_sell['askPrice']
+    df_sell['amount'] = (usdt * (1 - commission)) / df_sell['bidprice']
+    df_sell['usdt_equals'] = df_sell['amount'] * df_sell['askprice']
 
     # Calculate profit for both operations
     df_buy['profit'] = (df_buy['usdt_equals'] - usdt) / usdt * 100
@@ -44,12 +44,12 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     df_data = pd.concat([df_buy, df_sell])
 
     # Add placeholders for new columns
-    new_columns = ['pair2', 'base2', 'quote2', 'bidPrice2', 'bidQty2', 'askPrice2', 'askQty2', 'swap2', 'amount2', 'usdt_equals2', 'profit2']
+    new_columns = ['pair2', 'base2', 'quote2', 'bidprice2', 'bidqty2', 'askprice2', 'askqty2', 'swap2', 'amount2', 'usdt_equals2', 'profit2']
     for col in new_columns:
         df_data[col] = np.nan
 
     # Rearrange columns
-    df_data = df_data[['symbol', 'pair', 'base', 'quote', 'bidPrice', 'bidQty', 'askPrice', 'askQty', 'swap', 'amount', 'usdt_equals', 'profit'] + new_columns]
+    df_data = df_data[['symbol', 'pair', 'base', 'quote', 'bidprice', 'bidqty', 'askprice', 'askqty', 'swap', 'amount', 'usdt_equals', 'profit'] + new_columns]
 
     # Sort by profit and get top 10
     df_data = df_data.sort_values('profit', ascending=False).head(900)
