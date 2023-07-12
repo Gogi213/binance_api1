@@ -1,6 +1,7 @@
 # calculate_profit.py
 import pandas as pd
 import numpy as np
+from bd import connect_to_db, close_connection, update_table
 
 def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     df_data = pd.DataFrame(data)
@@ -53,5 +54,14 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
 
     # Sort by profit and get top 10
     df_data = df_data.sort_values('profit', ascending=False).head(900)
+
+    # Connect to the database
+    conn = connect_to_db()
+
+    # Update the 'binance_data' table
+    update_table(conn, df_data, 'binance_data')
+
+    # Close the connection to the database
+    close_connection(conn)
 
     return df_data

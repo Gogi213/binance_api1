@@ -1,6 +1,7 @@
 # calculate_profit2
 import pandas as pd
 import numpy as np
+from bd import connect_to_db, close_connection, update_table
 
 def calculate_profit2():
     # Load data from csv files
@@ -80,3 +81,12 @@ def calculate_profit2():
 
     # Save df_data to csv
     df_data.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\binance_data.csv', index=False)
+
+    # Connect to the database
+    conn = connect_to_db()
+
+    # Update the 'binance_data' table
+    update_table(conn, df_data, 'binance_data')
+
+    # Close the connection to the database
+    close_connection(conn)
