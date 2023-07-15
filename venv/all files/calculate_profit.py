@@ -28,19 +28,23 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
 
     # Calculate buy_amount and usdt_equals for buy operations
     df_buy['amount'] = (usdt / df_buy['askprice']) * (1 - commission)
-    df_buy['usdt_equals'] = df_buy['amount'] * (df_buy['bidprice'] + df_sell['askprice'])/2
+    df_buy['usdt_equals'] = df_buy['amount'] * (df_buy['bidprice'] + df_buy['askprice'])/2
 
     # Calculate sell_amount and usdt_equals for sell operations
     df_sell['amount'] = (usdt * (1 - commission)) / df_sell['bidprice']
-    df_sell['usdt_equals'] = df_sell['amount'] * (df_buy['bidprice'] + df_sell['askprice'])/2
+    df_sell['usdt_equals'] = df_sell['amount'] * (df_sell['bidprice'] + df_sell['askprice'])/2
 
     # Calculate profit for both operations
     df_buy['profit'] = (df_buy['usdt_equals'] - usdt) / usdt * 100
-    df_sell['profit'] = (usdt - df_sell['usdt_equals']) / usdt * 100
+    df_sell['profit'] = (df_sell['usdt_equals'] - usdt) / usdt * 100
 
     # Add 'swap' column
     df_buy.insert(df_buy.columns.get_loc('amount'), 'swap', df_buy['base'])
     df_sell.insert(df_sell.columns.get_loc('amount'), 'swap', df_sell['quote'])
+
+
+    df_buy.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\debug_buy.csv')
+    df_sell.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\debug_sell.csv')
 
     # Concatenate buy and sell dataframes
     df_data = pd.concat([df_buy, df_sell])
@@ -70,6 +74,8 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
 
     # Переиндексируйте DataFrame
     df_data = df_data.reindex(columns=cols)
+
+    print(df_data[['swap', 'amount', 'usdt_equals', 'profit']])
 
     # Update the 'binance_data' table
     update_table(conn, df_data, 'binance_data')
