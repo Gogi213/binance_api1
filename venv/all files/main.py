@@ -57,7 +57,10 @@ update_table(conn, formatted_df, 'binance_data')
 # Close the connection to the database
 conn.close()
 
+formatted_df.to_csv('binance_data.csv', index=False)
 print("Data has been written to 'binance_data.csv'")
+
+formatted_df_prices.to_csv('binance_prices.csv', index=False)
 print("Data has been written to 'binance_prices.csv'")
 
 # Call new function for the second stage of profit calculation

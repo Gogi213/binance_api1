@@ -1,12 +1,13 @@
 # calculate_profit2
 import pandas as pd
 import numpy as np
-from bd import connect_to_db, close_connection, update_table
+from bd import connect_to_db, update_table
 
 def calculate_profit2():
     # Load data from csv files
-    df_data = pd.read_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\binance_data.csv')
-    df_prices = pd.read_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\binance_prices.csv')
+    conn = connect_to_db()
+    df_data = pd.read_sql('SELECT * FROM binance_data', conn)
+    df_prices = pd.read_sql('SELECT * FROM binance_prices', conn)
 
     # Define commission
     commission = 0.001
@@ -79,14 +80,11 @@ def calculate_profit2():
             df_data.loc[index, 'usdt_equals2'] = usdt_equals2
             df_data.loc[index, 'profit2'] = profit2
 
-    # Save df_data to csv
-    df_data.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\binance_data.csv', index=False)
+    # Update table binance_data
+    update_table(conn, df_data, 'binance_data')
 
     # Connect to the database
     conn = connect_to_db()
 
     # Update the 'binance_data' table
     update_table(conn, df_data, 'binance_data')
-
-    # Close the connection to the database
-    close_connection(conn)

@@ -1,7 +1,7 @@
 # calculate_profit.py
 import pandas as pd
 import numpy as np
-from bd import connect_to_db, close_connection, update_table
+from bd import connect_to_db, update_table
 from binance_api import get_binance_status
 
 def calculate_profit(data, pairs, usdt=1000, commission=0.001):
@@ -46,7 +46,7 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     df_data = pd.concat([df_buy, df_sell])
 
     # Add placeholders for new columns
-    new_columns = ['pair2', 'base2', 'quote2', 'bidprice2', 'bidqty2', 'askprice2', 'askqty2', 'swap2', 'amount2', 'usdt_equals2', 'profit2']
+    new_columns = ['pair2', 'base2', 'quote2', 'bidprice2', 'bidqty2', 'askprice2', 'askqty2', 'swap2', 'amount2', 'usdt_equals2', 'profit2','pair3', 'base3', 'quote3', 'bidprice3', 'bidqty3', 'askprice3', 'askqty3', 'swap3', 'amount3', 'usdt_equals3', 'profit3']
     for col in new_columns:
         df_data[col] = np.nan
 
@@ -64,8 +64,5 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
 
     # Update the 'binance_data' table
     update_table(conn, df_data, 'binance_data')
-
-    # Close the connection to the database
-    close_connection(conn)
 
     return df_data
