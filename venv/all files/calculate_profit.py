@@ -62,6 +62,15 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     # Добавьте следующую строку перед вызовом update_table
     df_data['status'] = df_data['symbol'].map(get_binance_status())
 
+    # Получите список имен столбцов
+    cols = list(df_data.columns)
+
+    # Переместите столбец 'status' сразу после 'symbol'
+    cols.insert(1, cols.pop(cols.index('status')))
+
+    # Переиндексируйте DataFrame
+    df_data = df_data.reindex(columns=cols)
+
     # Update the 'binance_data' table
     update_table(conn, df_data, 'binance_data')
 
