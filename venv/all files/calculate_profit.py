@@ -28,11 +28,11 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
 
     # Calculate buy_amount and usdt_equals for buy operations
     df_buy['amount'] = (usdt / df_buy['askprice']) * (1 - commission)
-    df_buy['usdt_equals'] = df_buy['amount'] * df_buy['bidprice']
+    df_buy['usdt_equals'] = df_buy['amount'] * (df_buy['bidprice'] + df_sell['askprice'])/2
 
     # Calculate sell_amount and usdt_equals for sell operations
     df_sell['amount'] = (usdt * (1 - commission)) / df_sell['bidprice']
-    df_sell['usdt_equals'] = df_sell['amount'] * df_sell['askprice']
+    df_sell['usdt_equals'] = df_sell['amount'] * (df_buy['bidprice'] + df_sell['askprice'])/2
 
     # Calculate profit for both operations
     df_buy['profit'] = (df_buy['usdt_equals'] - usdt) / usdt * 100
