@@ -60,9 +60,6 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     # Sort by profit and get top 10
     df_data = df_data.sort_values('profit', ascending=False).head(900)
 
-    # Connect to the database
-    conn = connect_to_db()
-
     # Добавьте следующую строку перед вызовом update_table
     df_data['status'] = df_data['symbol'].map(get_binance_status())
 
@@ -74,10 +71,7 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
 
     # Переиндексируйте DataFrame
     df_data = df_data.reindex(columns=cols)
+    conn = connect_to_db()
 
-    print(df_data[['swap', 'amount', 'usdt_equals', 'profit']])
-
-    # Update the 'binance_data' table
     update_table(conn, df_data, 'binance_data')
-
     return df_data
