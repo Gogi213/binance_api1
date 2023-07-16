@@ -1,3 +1,4 @@
+# main.py
 import pandas as pd
 import binance_api
 from binance_api import get_binance_data, get_binance_symbols, get_binance_status

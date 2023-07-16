@@ -4,10 +4,13 @@ import numpy as np
 from bd import connect_to_db, update_table
 
 def calculate_profit2():
-    # Load data from csv files
+    # Load data from table
     conn = connect_to_db()
     df_data = pd.read_sql('SELECT * FROM binance_data', conn)
     df_prices = pd.read_sql('SELECT * FROM binance_prices', conn)
+
+    # df_data.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\debug_df_data.csv')
+    # df_prices.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\debug_df_prices.csv')
 
     # Define commission
     commission = 0.001
@@ -18,7 +21,7 @@ def calculate_profit2():
         swap_currency = row['swap']
 
         # Get the quantity of the currency to swap
-        quantity = row['amount']
+        quantity = float(row['amount'])
 
         # Filter df_prices for rows where the base or quote currency is the swap currency
         df_prices_filtered = df_prices[(df_prices['base'] == swap_currency) | (df_prices['quote'] == swap_currency)]
@@ -37,7 +40,7 @@ def calculate_profit2():
                 profit2 = (usdt_equals2 - quantity) / quantity * 100
             else:
                 # If the quote currency is the swap currency, we are buying
-                amount2 = quantity * row2['askprice'] * (1 - commission)
+                amount2 = quantity * float(row2['askprice']) * (1 - commission)
                 usdt_equals2 = amount2 / row2['bidprice']
                 profit2 = (usdt_equals2 - quantity) / quantity * 100
 
