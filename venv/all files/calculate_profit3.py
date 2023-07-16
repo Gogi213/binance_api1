@@ -13,7 +13,7 @@ def calculate_profit3():
     commission = 0.001
 
     # Define stablecoins
-    stablecoins = ['USDT', 'USDC', 'BUSD', 'TUSD']
+    stablecoins = ['USDT', 'USDC', 'BUSD', 'TUSD', 'DAI']
 
     # Iterate over each row in df_data
     for index, row in df_data.iterrows():

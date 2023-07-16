@@ -8,4 +8,3 @@ def connect_to_db(database='binance_project', user='postgres', password='1993871
 
 def update_table(engine, df, table_name):
     df.to_sql(table_name, engine, if_exists='replace', index=False)
-
