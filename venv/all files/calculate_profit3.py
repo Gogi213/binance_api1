@@ -21,7 +21,11 @@ def calculate_profit3():
         swap_currency = row['swap2']  # change to swap2 for third stage
 
         # Get the quantity of the currency to swap
-        quantity = float(row['amount2'])  # change to amount2 for third stage
+        if row['amount2'] is not None:
+            quantity = float(row['amount2'])
+        else:
+            print(f"Warning: amount2 is None for row {row}")
+            quantity = 0.0  # or some other default value
 
         # Filter df_prices for rows where the base currency is the swap currency and the quote currency is a stablecoin
         df_prices_filtered = df_prices[(df_prices['base'] == swap_currency) & (df_prices['quote'].isin(stablecoins))]
@@ -34,8 +38,8 @@ def calculate_profit3():
         for index2, row2 in df_prices_filtered.iterrows():
             # Calculate the profit for this row
             # If the base currency is the swap currency, we are selling
-            amount3 = quantity / row2['bidprice'] * (1 - commission)
-            usdt_equals3 = amount3 * row2['askprice']
+            amount3 = quantity / float(row2['bidprice']) * (1 - commission)
+            usdt_equals3 = amount3 * float(row2['askprice'])
             profit3 = (usdt_equals3 - quantity) / quantity * 100
 
             # If this profit is better than the best profit so far, update the best profit and corresponding row
@@ -46,10 +50,10 @@ def calculate_profit3():
         # Check if a best row was found
         if best_row is not None:
             # Calculate the amount of the third currency to buy
-            amount3 = (quantity - (quantity * 0.001)) / best_row['bidprice']
+            amount3 = (quantity - (quantity * 0.001)) / float(best_row['bidprice'])
 
             # Calculate the USDT equivalent of the third currency
-            usdt_equals3 = amount3 * best_row['askprice']
+            usdt_equals3 = amount3 * float(best_row['askprice'])
 
             # Calculate the profit of the third trade
             profit3 = (usdt_equals3 - (usdt_equals3 * 0.001)) - quantity
