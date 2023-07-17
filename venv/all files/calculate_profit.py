@@ -57,9 +57,6 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     # Rearrange columns
     df_data = df_data[['symbol', 'pair', 'base', 'quote', 'bidprice', 'bidqty', 'askprice', 'askqty', 'swap', 'amount', 'usdt_equals', 'profit'] + new_columns]
 
-    # Sort by profit and get top 10
-    df_data = df_data.sort_values('profit', ascending=False).head(5000)
-
     # Добавьте следующую строку перед вызовом update_table
     df_data['status'] = df_data['symbol'].map(get_binance_status())
 

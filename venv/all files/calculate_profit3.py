@@ -1,4 +1,3 @@
-# calculate_profit3.py
 import pandas as pd
 from bd import connect_to_db, update_table
 
@@ -29,10 +28,6 @@ def calculate_profit3():
         # Filter df_prices for rows where the base currency is the swap currency and the quote currency is USDT
         df_prices_filtered = df_prices[(df_prices['base'] == swap_currency) & (df_prices['quote'] == stablecoin)]
 
-        # Initialize variables to store the best profit and corresponding row
-        best_profit = 0
-        best_row = None
-
         # Iterate over each row in df_prices_filtered
         for index2, row2 in df_prices_filtered.iterrows():
             # Calculate the profit for this row
@@ -40,30 +35,14 @@ def calculate_profit3():
             usdt_equals3 = amount3 * float(row2['askprice'])
             profit3 = (usdt_equals3 - quantity) / quantity * 100
 
-            # If this profit is better than the best profit so far, update the best profit and corresponding row
-            if profit3 > best_profit:
-                best_profit = profit3
-                best_row = row2
-
-        # Check if a best row was found
-        if best_row is not None:
-            # Calculate the amount of the third currency to buy
-            amount3 = (quantity - (quantity * 0.001)) / float(best_row['bidprice'])
-
-            # Calculate the USDT equivalent of the third currency
-            usdt_equals3 = amount3 * float(best_row['askprice'])
-
-            # Calculate the profit of the third trade
-            profit3 = (usdt_equals3 - (usdt_equals3 * 0.001)) - quantity
-
-            # Update df_data with the information from the best row
-            df_data.loc[index, 'pair3'] = best_row['pair']
-            df_data.loc[index, 'base3'] = best_row['base']
-            df_data.loc[index, 'quote3'] = best_row['quote']
-            df_data.loc[index, 'bidprice3'] = best_row['bidprice']
-            df_data.loc[index, 'bidqty3'] = best_row['bidqty']
-            df_data.loc[index, 'askprice3'] = best_row['askprice']
-            df_data.loc[index, 'askqty3'] = best_row['askqty']
+            # Update df_data with the information from the row
+            df_data.loc[index, 'pair3'] = row2['pair']
+            df_data.loc[index, 'base3'] = row2['base']
+            df_data.loc[index, 'quote3'] = row2['quote']
+            df_data.loc[index, 'bidprice3'] = row2['bidprice']
+            df_data.loc[index, 'bidqty3'] = row2['bidqty']
+            df_data.loc[index, 'askprice3'] = row2['askprice']
+            df_data.loc[index, 'askqty3'] = row2['askqty']
             df_data.loc[index, 'swap3'] = stablecoin
             df_data.loc[index, 'amount3'] = amount3
             df_data.loc[index, 'usdt_equals3'] = usdt_equals3
