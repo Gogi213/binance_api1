@@ -23,7 +23,6 @@ def process_data(df):
     df['pair'].fillna(df['symbol'], inplace=True)
     df[['base', 'quote']] = df['pair'].str.split('/', expand=True)
     df[['askprice', 'bidprice', 'askqty', 'bidqty']] = df[['askprice', 'bidprice', 'askqty', 'bidqty']].astype(float)
-    df = df.loc[(df['bidprice'] > 0) & (df['askprice'] > 0)]
     formatted_df = df.applymap(custom_format)
     return formatted_df
 

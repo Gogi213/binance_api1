@@ -19,9 +19,6 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     # Convert 'askPrice', 'bidPrice', 'askQty', 'bidQty' to float
     df_data[['askprice', 'bidprice', 'askqty', 'bidqty']] = df_data[['askprice', 'bidprice', 'askqty', 'bidqty']].astype(float)
 
-    # Filter rows with zero values in 'askPrice', 'bidPrice', 'askQty', 'bidQty'
-    df_data = df_data[(df_data['askprice'] != 0) & (df_data['bidprice'] != 0) & (df_data['askqty'] != 0) & (df_data['bidqty'] != 0)]
-
     # Create two dataframes for buy and sell operations
     df_buy = df_data[df_data['quote'] == 'USDT'].copy()
     df_sell = df_data[df_data['base'] == 'USDT'].copy()
@@ -41,10 +38,6 @@ def calculate_profit(data, pairs, usdt=1000, commission=0.001):
     # Add 'swap' column
     df_buy.insert(df_buy.columns.get_loc('amount'), 'swap', df_buy['base'])
     df_sell.insert(df_sell.columns.get_loc('amount'), 'swap', df_sell['quote'])
-
-
-    df_buy.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\debug_buy.csv')
-    df_sell.to_csv('C:\\Users\\Redmi\\PycharmProjects\\pythonProject1\\venv\\all files\\debug_sell.csv')
 
     # Concatenate buy and sell dataframes
     df_data = pd.concat([df_buy, df_sell])
