@@ -20,7 +20,8 @@ def calculate_profit2():
         quantity = float(row['amount'])
 
         # Filter df_prices for rows where the base or quote currency is the swap currency
-        df_prices_filtered = df_prices[(df_prices['base'] == swap_currency) | (df_prices['quote'] == swap_currency)]
+        df_prices_filtered = df_prices[((df_prices['base'] == swap_currency) & (df_prices['quote'] == 'BTC')) | (
+                    (df_prices['quote'] == swap_currency) & (df_prices['base'] == 'BTC'))]
 
         # Iterate over each row in df_prices_filtered
         for index2, row2 in df_prices_filtered.iterrows():

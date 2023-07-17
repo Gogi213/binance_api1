@@ -42,12 +42,6 @@ engine = connect_to_db()
 update_table(engine, formatted_df_prices, 'binance_prices')
 update_table(engine, formatted_df, 'binance_data')
 
-formatted_df.to_csv('binance_data.csv', index=False)
-print("Data has been written to 'binance_data.csv'")
-
-formatted_df_prices.to_csv('binance_prices.csv', index=False)
-print("Data has been written to 'binance_prices.csv'")
-
 calculate_profit2()
 print("Second stage of profit calculation has been completed.")
 

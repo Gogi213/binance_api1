@@ -26,14 +26,17 @@ def calculate_profit3():
             quantity = 0.0  # or some other default value
 
         # Filter df_prices for rows where the base currency is the swap currency and the quote currency is USDT
-        df_prices_filtered = df_prices[(df_prices['base'] == swap_currency) & (df_prices['quote'] == stablecoin)]
+        df_prices_filtered = df_prices[(df_prices['base'] == 'BTC') & (df_prices['quote'] == 'USDT')]
 
         # Iterate over each row in df_prices_filtered
         for index2, row2 in df_prices_filtered.iterrows():
             # Calculate the profit for this row
             amount3 = quantity / float(row2['bidprice']) * (1 - commission)
             usdt_equals3 = amount3 * float(row2['askprice'])
-            profit3 = (usdt_equals3 - quantity) / quantity * 100
+            if quantity != 0:
+                profit3 = (usdt_equals3 - quantity) / quantity * 100
+            else:
+                profit3 = 0
 
             # Update df_data with the information from the row
             df_data.loc[index, 'pair3'] = row2['pair']
