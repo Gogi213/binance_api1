@@ -1,12 +1,81 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>My Web Service</title>
-</head>
-<body>
-    <h1>Table 1</h1>
-    {{ table1|safe }}
-    <h1>Table 2</h1>
-    {{ table2|safe }}
-</body>
-</html>
+<h1>Table 1</h1>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Symbol</th>
+    <th>Status</th>
+    <th>Pair</th>
+    <th>Base</th>
+    <th>Quote</th>
+    <th>Bid Price</th>
+    <th>Bid Qty</th>
+    <th>Ask Price</th>
+    <th>Ask Qty</th>
+    <th>Swap</th>
+    <th>Amount</th>
+    <th>USDT Equals</th>
+    <th>Profit</th>
+    <th>Pair 2</th>
+    <th>Base 2</th>
+    <th>Quote 2</th>
+    <th>Bid Price 2</th>
+    <th>Bid Qty 2</th>
+    <th>Ask Price 2</th>
+    <th>Ask Qty 2</th>
+    <th>Swap 2</th>
+    <th>Amount 2</th>
+    <th>USDT Equals 2</th>
+    <th>Profit 2</th>
+    <th>Pair 3</th>
+    <th>Base 3</th>
+    <th>Quote 3</th>
+    <th>Bid Price 3</th>
+    <th>Bid Qty 3</th>
+    <th>Ask Price 3</th>
+    <th>Ask Qty 3</th>
+    <th>Swap 3</th>
+    <th>Amount 3</th>
+    <th>USDT Equals 3</th>
+    <th>Profit 3</th>
+  </tr>
+  {% for data in table1 %}
+  <tr>
+    <td>{{ data.id }}</td>
+    <td>{{ data.symbol }}</td>
+    <td>{{ data.status }}</td>
+    <td>{{ data.pair }}</td>
+    <td>{{ data.base }}</td>
+    <td>{{ data.quote }}</td>
+    <td>{{ data.bidprice }}</td>
+    <td>{{ data.bidqty }}</td>
+    <td>{{ data.askprice }}</td>
+    <td>{{ data.askqty }}</td>
+    <td>{{ data.swap }}</td>
+    <td>{{ data.amount }}</td>
+    <td>{{ data.usdt_equals }}</td>
+    <td>{{ data.profit }}</td>
+    <td>{{ data.pair2 }}</td>
+    <td>{{ data.base2 }}</td>
+    <td>{{ data.quote2 }}</td>
+    <td>{{ data.bidprice2 }}</td>
+    <td>{{ data.bidqty2 }}</td>
+    <td>{{ data.askprice2 }}</td>
+    <td>{{ data.askqty2 }}</td>
+    <td>{{ data.swap2 }}</td>
+    <td>{{ data.amount2 }}</td>
+    <td>{{ data.usdt_equals2 }}</td>
+    <td>{{ data.profit2 }}</td>
+    <td>{{ data.pair3 }}</td>
+    <td>{{ data.base3 }}</td>
+    <td>{{ data.quote3 }}</td>
+    <td>{{ data.bidprice3 }}</td>
+    <td>{{ data.bidqty3 }}</td>
+    <td>{{ data.askprice3 }}</td>
+    <td>{{ data.askqty3 }}</td>
+    <td>{{ data.swap3 }}</td>
+    <td>{{ data.amount3 }}</td>
+    <td>{{ data.usdt_equals3 }}</td>
+    <td>{{ data.profit3 }}</td>
+  </tr>
+  {% endfor %}
+</table>
