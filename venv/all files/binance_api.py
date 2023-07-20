@@ -1,4 +1,4 @@
-# binance_api.p
+# binance_api
 import requests
 import pandas as pd
 
